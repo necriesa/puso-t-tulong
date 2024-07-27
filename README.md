@@ -19,7 +19,7 @@ $ .venv/Scripts/activate
 
 3. install flask framework: 
 ```
-$ pip install Flask
+$ pip install Flask Flask_sqlalchemy
 ```
 
 4. run website locally: 
