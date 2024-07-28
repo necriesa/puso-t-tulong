@@ -17,27 +17,12 @@ $ python -m venv .venv
 $ .venv/Scripts/activate
 ```
 
-3. install flask framework: 
+3. install dependencies: 
 ```
-$ pip install Flask Flask_sqlalchemy
-```
-
-4. install flask_wtf
-```
-$ pip install flask_wtf
+$ pip install -r requirements.txt
 ```
 
-5. install flask_login
-```
-$ pip install flask_login
-```
-
-6. install flask_bcrypt
-```
-$pip install flask_bcrypt
-```
-
-7. run website locally: 
+4. run website locally: 
 ```
 $ py app.py
 ```
