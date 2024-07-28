@@ -22,7 +22,22 @@ $ .venv/Scripts/activate
 $ pip install Flask Flask_sqlalchemy
 ```
 
-4. run website locally: 
+4. install flask_wtf
+```
+$ pip install flask_wtf
+```
+
+5. install flask_login
+```
+$ pip install flask_login
+```
+
+6. install flask_bcrypt
+```
+$pip install flask_bcrypt
+```
+
+7. run website locally: 
 ```
 $ py app.py
 ```
