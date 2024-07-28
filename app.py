@@ -110,6 +110,22 @@ def logout():
 @app.route('/register', methods=['POST', 'GET']) #fix this part to add all form details 
 def register():
     form = Registration()
+
+    if form.validate_on_submit():
+        hashed_pass = bcrypt.generate_password_hash(form.password.data)
+        new_user = User(
+            username = form.username.data,
+            password = hashed_pass,
+            email = form.email.data,
+            age = form.age.data, 
+            birthday = form.birthday.data
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        return redirect('/login')
+
     return render_template('register.html', form=form)
 
 if __name__ == "__main__":
