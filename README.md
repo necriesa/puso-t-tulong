@@ -17,9 +17,9 @@ $ python -m venv .venv
 $ .venv/Scripts/activate
 ```
 
-3. install flask framework: 
+3. install dependencies: 
 ```
-$ pip install Flask
+$ pip install -r requirements.txt
 ```
 
 4. run website locally: 
