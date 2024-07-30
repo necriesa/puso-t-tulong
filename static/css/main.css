@@ -1,3 +1,15 @@
+.logo-anchor{
+  color: black;
+  background-color: white;
+  text-decoration: none;
+}
+
+.anchor-button{
+  color: black;
+  background-color: white;
+  text-decoration: none;
+}
+
 .navbar-container{
   display: flex;
   justify-content: space-around;
@@ -11,18 +23,19 @@
   text-decoration: none;
 }
 
+.navbar ul{
+  display: inline;
+  list-style-type: none;
+  overflow: hidden;
+}
 .navbar li{
   list-style-type: none;
   display: flex;
   justify-content: space-around;
-  float: left;
+  text-align: center;
   padding: 10px;
+  float: left;
 }
-
-.vertical-bar{
-  Float: left;
-  height: 20px;
-  width: 1px;
-  margin: 0 10px;
-  background-color: black;
+.navbar li:not(:last-child){
+  border-right: 1px solid black;
 }
