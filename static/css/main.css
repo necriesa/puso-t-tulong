@@ -25,18 +25,17 @@
 }
 
 .navbar ul{
-  display: inline;
   list-style-type: none;
+  display: inline;
 }
 .navbar li{
-  list-style-type: none;
   display: flex;
   justify-content: space-around;
   text-align: center;
-  padding: 10px;
-  padding-right: 20px;
-  padding-left: 20px;
   float: left;
+  padding: 10px;
+  padding-left: 25px;
+  padding-right: 25px;
 }
 .navbar li:not(:last-child){
   border-right: 1px solid black;
