@@ -7,6 +7,7 @@ from flask_bcrypt import Bcrypt
 from wtforms import StringField, PasswordField, SubmitField, IntegerField, DateField
 from wtforms.validators import InputRequired, Length, ValidationError
 
+#create the app and connect to the dbs
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///information.db'
@@ -18,6 +19,7 @@ app.config['SECRET_KEY'] = 'this_is_the_secretKey'
 
 db = SQLAlchemy(app)
 
+#login Manager for logins 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
@@ -26,12 +28,7 @@ login_manager.login_view = "login"
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-#TODO: create the databases within the app using the python shell 
-#TODO ``` from app import app, db 
-#TODO     with app.app_context:
-#TODO          db.create_all()
-#TODO ```
-#Tables 
+#Table Schemas
 class Information(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(30), nullable = False)
@@ -49,7 +46,6 @@ class User(db.Model, UserMixin):
     age = db.Column(db.Integer, nullable = False)
     birthday = db.Column(db.Date, nullable=False)
     
-
 class Drive(db.Model):
     __bind_key__ = 'drives'
     id = db.Column(db.Integer, primary_key=True)
@@ -76,18 +72,28 @@ class Registration(FlaskForm):
         if existing_username:
             raise ValidationError("The username already exists. Please choose another.")
         
-
+# Login Form class
 class Login(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder" : "Username"})
     password = PasswordField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder" : "Password"})
 
     submit = SubmitField("Login")
 
+#Create Post Class
+class UserPost(FlaskForm):
+    title = StringField(validators=[InputRequired(), Length(min=2, max=20)], render_kw={"placeholder" : "Post title"})
+    body = StringField(validators=[InputRequired(), Length(min=5, max = 2000)], render_kw={"placeholder" : "Details..."})
+    contact_details = StringField(validators=[InputRequired(), Length(max=50)], render_kw={"placeholder" : "contact details"})
 
+    submit = SubmitField("UserPost")
+#Routes 
+
+#home page
 @app.route('/')
 def index():
     return render_template(index.html)
 
+#login page
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     loginForm = Login()
@@ -96,17 +102,19 @@ def login():
         user = User.query.filter_by(username=loginForm.username.data).first()
         if user and bcrypt.check_password_hash(user.password, loginForm.password.data):
             login_user(user)
-            return redirect('/main')  # send to whatever page after login
+            return redirect('/main')
 
     return render_template('login.html', form=loginForm)
 
+#logout function
 @app.route('/logout', methods=['POST', 'GET'])
-@login_required #login is required for this 
+@login_required
 def logout():
     logout_user()
     return redirect('/login')
 
-@app.route('/register', methods=['POST', 'GET']) #fix this part to add all form details 
+#register page
+@app.route('/register', methods=['POST', 'GET'])
 def register():
     registerForm = Registration()
 
@@ -127,10 +135,36 @@ def register():
 
     return render_template('register.html', form=registerForm)
 
+#after logging in
 @app.route('/main')
 @login_required
 def main():
     return render_template('main.html')
+
+@app.route('/goPost')
+def goPost():
+    if current_user.is_authenticated:
+        return redirect("{{ url_for('createPost') }}")
+    else:
+        return redirect("{{ url_for('login') }}")
+    
+@app.route('/createPost')
+@login_required
+def createPost():
+    PostForm = UserPost()
+
+    if PostForm.validate_on_submit():
+        new_post = Information(
+            user = current_user.username,
+            title = PostForm.title.data,
+            body = PostForm.body.data,
+            contact_details = PostForm.contact_details.data
+        )
+
+        db.session.add(new_post)
+        db.session.commit()
+
+        return redirect("{{ url_for('main') }}")
 
 if __name__ == "__main__":
     app.run(debug=True) #remember to set to False when publishing i think
