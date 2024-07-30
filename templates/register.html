@@ -8,22 +8,24 @@
 
 {% block body %}
 
-    <h1>Registration Page</h1>
+    <h1 class="user-form-header">Create Account</h1>
 
-    <form method="POST" action="">
-        {{ form.hidden_tag() }}
-        {{ form.username }}
-        {{ form.password }}
-        {{ form.email }}
-        {{ form.age }}
-        {{ form.birthday }}
-        {{ form.submit }}
-    </form>
+    <div class="user-form-container">
+        <form method="POST" action="" class="user-register-form">
+            <div class="user-form">{{ form.hidden_tag() }}</div>
+            <div class="user-form-input">{{ form.username }}</div>
+            <div class="user-form-input">{{ form.password }}</div>
+            <div class="user-form-input">{{ form.email }}</div>
+            <div class="user-form-input">{{ form.age }}</div>
+            <div class="user-form-input">{{ form.birthday }}</div>
+            <div class="user-form-button">{{ form.submit }}</div>
+        </form>
+    </div>
+
+    <footer>
+        <div>
+            <p>Already have an account? <a href="/login" class="user-auth-button">Log-in here</a></p>
+        </div>
+    </footer>
 
 {% endblock %}
-
-<footer>
-    <div>
-        <p>Already have an account? <a href="/login" class="anchor-button">Log-in here</a></p>
-    </div>
-</footer>

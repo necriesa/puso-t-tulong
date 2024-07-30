@@ -84,7 +84,7 @@ class Login(FlaskForm):
     submit = SubmitField("Login")
 
 
-@app.route('/', methods=['POST', 'GET'])
+@app.route('/')
 def index():
     return render_template('index.html')
 

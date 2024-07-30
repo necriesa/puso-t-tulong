@@ -8,18 +8,20 @@
 
 {% block body %}
 
-    <h1>Login Page</h1>
+    <h1 class="user-form-header">Sign In</h1>
 
-    <form method="POST" action="">
-        {{ form.hidden_tag() }}
-        {{ form.username }}
-        {{ form.password }}
-        {{ form.submit }}
-    </form>
+    <div class="user-form-container">
+        <form method="POST" action="" class="user-login-form">
+            <div class="user-form">{{ form.hidden_tag() }}</div>
+            <div class="user-form-input">{{ form.username }}</div>
+            <div class="user-form-input">{{ form.password }}</div>
+            <div class="user-form-button">{{ form.submit }}</div>
+        </form>
+    </div>
 
     <div>
         <p>
-            Don't have an account? <a href="/register" class="anchor-button">Register Now</a>
+            Don't have an account? <a href="/register" class="user-auth-button">Register Now</a>
         </p>
     </div>
 
