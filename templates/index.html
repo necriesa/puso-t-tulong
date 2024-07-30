@@ -6,7 +6,6 @@
 
 {% block body %}
 
-<header>
     <div class="navbar-container">
         <a href="/" class="logo-anchor">Puso't Tulong</a>
         <ul class="navbar">
@@ -15,15 +14,14 @@
             <li class="navbar"><a href="/login" class="navbar">Login</a></li>
         </ul>
     </div>
-</header>
 
-<h1> Care to lend to a hand to a student </h1>
-<h2> Donate some old school materials </h2>
-
-<a href="/register" class="anchor-button">Register Now</a>
-
-<footer>
-    <p>&copy; 2024 Puso't Tulong Website. All rights reserved.</p>
-</footer>
+    <div class="content-banner">
+        <img src="{{ url_for('static', filename='images/home/background-2.jpg') }}" class="background-image">
+        <div class="content-banner-info">
+            <h1> Care to lend to a hand to a student </h1>
+            <h2> Donate some old school materials </h2>
+            <a href="/register" class="anchor-button">Register Now</a>
+        </div>
+    </div>
 
 {% endblock %}
