@@ -14,6 +14,7 @@ app.config['SQLALCHEMY_BINDS'] = {
     'users' : 'sqlite:///users.db',
     'drives' : 'sqlite:///drives.db'
 }
+app.config['SECRET _KEY'] = "secretkey"
 
 db = SQLAlchemy(app)
 

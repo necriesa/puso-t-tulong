@@ -2,14 +2,8 @@
   display: flex;
   justify-content: space-around;
   align-items: baseline;
+  border-bottom: 1px solid white;
 }
-
-/* .navbar ul{
-  list-style-type: none;
-  display: flex;
-  justify-content: space-evenly;
-  padding: 10px;
-} */
 
 .navbar a{
   color: black;
@@ -23,4 +17,12 @@
   justify-content: space-around;
   float: left;
   padding: 10px;
+}
+
+.vertical-bar{
+  Float: left;
+  height: 20px;
+  width: 1px;
+  margin: 0 10px;
+  background-color: black;
 }
