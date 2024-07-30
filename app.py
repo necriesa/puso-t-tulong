@@ -26,12 +26,12 @@ login_manager.login_view = "login"
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-#TODO: create the databases within the app using the python shell 
-#TODO ``` from app import app, db 
+#TODO: create the databases within the app using the python shell
+#TODO ``` from app import app, db
 #TODO     with app.app_context:
 #TODO          db.create_all()
 #TODO ```
-#Tables 
+#Tables
 class Information(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(30), nullable = False)
@@ -101,12 +101,12 @@ def login():
     return render_template('login.html', form=loginForm)
 
 @app.route('/logout', methods=['POST', 'GET'])
-@login_required #login is required for this 
+@login_required #login is required for this
 def logout():
     logout_user()
     return redirect('/login')
 
-@app.route('/register', methods=['POST', 'GET']) #fix this part to add all form details 
+@app.route('/register', methods=['POST', 'GET']) #fix this part to add all form details
 def register():
     registerForm = Registration()
 
@@ -116,7 +116,7 @@ def register():
             username = registerForm.username.data,
             password = hashed_pass,
             email = registerForm.email.data,
-            age = registerForm.age.data, 
+            age = registerForm.age.data,
             birthday = registerForm.birthday.data
         )
 
