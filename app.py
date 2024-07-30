@@ -137,7 +137,6 @@ def register():
 
 #after logging in
 @app.route('/main')
-@login_required
 def main():
     return render_template('main.html')
 
@@ -148,7 +147,7 @@ def goPost():
     else:
         return redirect("{{ url_for('login') }}")
     
-@app.route('/createPost')
+@app.route('/createPost', methods = ['POST', 'GET'])
 @login_required
 def createPost():
     PostForm = UserPost()
