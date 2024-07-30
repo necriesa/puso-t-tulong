@@ -1,9 +1,23 @@
-{% extends base.html %}
+{% extends 'base.html' %}
 
 {% block head %}
-  <title>Register User</title>
+
+    <title>Registration</title>
+
 {% endblock %}
 
 {% block body %}
-  <p>Hello World</p>
+
+    <h1>Registration Page</h1>
+
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        {{ form.username }}
+        {{ form.password }}
+        {{ form.email }}
+        {{ form.age }}
+        {{ form.birthday }}
+        {{ form.submit }}
+    </form>
+
 {% endblock %}
