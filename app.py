@@ -14,6 +14,7 @@ app.config['SQLALCHEMY_BINDS'] = {
     'users' : 'sqlite:///users.db',
     'drives' : 'sqlite:///drives.db'
 }
+app.config['SECRET_KEY'] = 'this_is_the_secretKey'
 
 db = SQLAlchemy(app)
 
@@ -85,21 +86,19 @@ class Login(FlaskForm):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template(index.html)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-    form = Login()
+    loginForm = Login()
     
-    if form.validate_on_submit():
-        user = User.query.filter_by(username = form.username.data).first()
+    if loginForm.validate_on_submit():
+        user = User.query.filter_by(username=loginForm.username.data).first()
+        if user and bcrypt.check_password_hash(user.password, loginForm.password.data):
+            login_user(user)
+            return redirect('/main')  # send to whatever page after login
 
-        if user:
-            if bcrypt.check_password_hash(user.password, form.password.data):
-                login_user(user)
-                return redirect('/') #send to whatever page after login
-
-    return render_template('login.html', form=form)
+    return render_template('login.html', form=loginForm)
 
 @app.route('/logout', methods=['POST', 'GET'])
 @login_required #login is required for this 
@@ -109,16 +108,16 @@ def logout():
 
 @app.route('/register', methods=['POST', 'GET']) #fix this part to add all form details 
 def register():
-    form = Registration()
+    registerForm = Registration()
 
-    if form.validate_on_submit():
-        hashed_pass = bcrypt.generate_password_hash(form.password.data)
+    if registerForm.validate_on_submit():
+        hashed_pass = bcrypt.generate_password_hash(registerForm.password.data)
         new_user = User(
-            username = form.username.data,
+            username = registerForm.username.data,
             password = hashed_pass,
-            email = form.email.data,
-            age = form.age.data, 
-            birthday = form.birthday.data
+            email = registerForm.email.data,
+            age = registerForm.age.data, 
+            birthday = registerForm.birthday.data
         )
 
         db.session.add(new_user)
@@ -126,7 +125,12 @@ def register():
 
         return redirect('/login')
 
-    return render_template('register.html', form=form)
+    return render_template('register.html', form=registerForm)
+
+@app.route('/main')
+@login_required
+def main():
+    return render_template('main.html')
 
 if __name__ == "__main__":
     app.run(debug=True) #remember to set to False when publishing i think
