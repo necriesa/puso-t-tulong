@@ -106,7 +106,7 @@ def logout():
     logout_user()
     return redirect('/login')
 
-@app.route('/login', methods=['POST', 'GET']) #fix this part to add all form details
+@app.route('/register', methods=['POST', 'GET']) #fix this part to add all form details
 def register():
     registerForm = Registration()
 
