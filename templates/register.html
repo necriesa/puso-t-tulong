@@ -1,31 +1,25 @@
-{% extends 'base.html' %}
+{% extends 'form_base.html' %}
 
 {% block head %}
-
-    <title>Registration</title>
-
+    <title>Register</title>
 {% endblock %}
 
 {% block body %}
-
-    <h1 class="user-form-header">Create Account</h1>
-
-    <div class="user-form-container">
-        <form method="POST" action="" class="user-register-form">
-            <div class="user-form">{{ form.hidden_tag() }}</div>
-            <div class="user-form-input">{{ form.username }}</div>
-            <div class="user-form-input">{{ form.password }}</div>
-            <div class="user-form-input">{{ form.email }}</div>
-            <div class="user-form-input">{{ form.age }}</div>
-            <div class="user-form-input">{{ form.birthday }}</div>
-            <div class="user-form-button">{{ form.submit }}</div>
+    <div class="form-container">
+        <form method="POST" action="" class="user-form">
+            <h1 class="form-title">Create Account</h1>
+            <div>{{ form.hidden_tag() }}</div>
+            <div class="form-input">{{ form.username }}</div>
+            <div class="form-input">{{ form.password }}</div>
+            <div class="form-input">{{ form.email }}</div>
+            <div class="form-input">{{ form.age }}</div>
+            <div class="form-input">{{ form.birthday }}</div>
+            <div class="form-button">{{ form.submit }}</div>
+            <div>
+                <p class="form-link">
+                    Already have an account? <a href="/login" class="form-link">Log-in here</a>
+                </p>
+            </div>
         </form>
     </div>
-
-    <footer>
-        <div>
-            <p>Already have an account? <a href="/login" class="user-auth-button">Log-in here</a></p>
-        </div>
-    </footer>
-
 {% endblock %}

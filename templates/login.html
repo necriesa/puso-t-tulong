@@ -1,28 +1,22 @@
-{% extends 'base.html' %}
+{% extends 'form_base.html' %}
 
 {% block head %}
-
     <title>Login</title>
-
 {% endblock %}
 
 {% block body %}
-
-    <h1 class="user-form-header">Sign In</h1>
-
-    <div class="user-form-container">
-        <form method="POST" action="" class="user-login-form">
-            <div class="user-form">{{ form.hidden_tag() }}</div>
-            <div class="user-form-input">{{ form.username }}</div>
-            <div class="user-form-input">{{ form.password }}</div>
-            <div class="user-form-button">{{ form.submit }}</div>
+    <div class="form-container">
+        <form method="POST" action="" class="user-form">
+            <h1 class="form-title">Sign In</h1>
+            <div>{{ form.hidden_tag() }}</div>
+            <div class="form-input">{{ form.username }}</div>
+            <div class="form-input">{{ form.password }}</div>
+            <div class="form-button">{{ form.submit }}</div>
+            <div>
+                <p class="form-link">
+                    Don't have an account? <a href="/register" class="form-link">Register Here</a>
+                </p>
+            </div>
         </form>
     </div>
-
-    <div>
-        <p>
-            Don't have an account? <a href="/register" class="user-auth-button">Register Now</a>
-        </p>
-    </div>
-
 {% endblock %}

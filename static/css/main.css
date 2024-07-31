@@ -57,14 +57,6 @@ footer {
   border-color: white;
 }
 
-.user-auth-button {
-  text-decoration: none;
-}
-.user-auth-button:hover {
-  text-decoration: underline;
-  font-weight: bold;
-}
-
 .content-banner {
   display: inline-block;
   overflow: hidden;
