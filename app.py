@@ -165,5 +165,10 @@ def createPost():
 
         return redirect("{{ url_for('main') }}")
 
+@app.route('/drives')
+def drives():
+    drives_info = Drive.query.all()
+    return render_template('drives', info = drives_info)
+
 if __name__ == "__main__":
     app.run(debug=True) #remember to set to False when publishing i think
