@@ -84,3 +84,27 @@ footer {
   height: 80%;
   z-index: -1;
 }
+
+.form-button {
+  margin: 1rem;
+  text-decoration: none;
+  text-align: center;
+  width: 100%;
+  padding: 1rem 2rem;
+  font-weight: bold;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  outline: none;
+  cursor: pointer;
+  background: cadetblue;
+}
+
+.form-button:hover {
+  background-color: rgb(79, 133, 134);
+}
+
+.form-button:active {
+  transform: scale(0.98);
+}
