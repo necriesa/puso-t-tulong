@@ -106,7 +106,7 @@ def logout():
     logout_user()
     return redirect('/login')
 
-@app.route('/register', methods=['POST', 'GET']) #fix this part to add all form details
+@app.route('/login', methods=['POST', 'GET']) #fix this part to add all form details
 def register():
     registerForm = Registration()
 
@@ -123,9 +123,9 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        return redirect('/login')
+        return redirect('/')
 
-    return render_template('register.html', form=registerForm)
+    return render_template('login.html', form=registerForm)
 
 @app.route('/main')
 @login_required

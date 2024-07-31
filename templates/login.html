@@ -6,7 +6,7 @@
 
 {% block body %}
     <div class="form-container">
-        <form method="POST" action="" class="user-form">
+        <form method="POST" action="" class="user-form form-hidden" id="login">
             <h1 class="form-title">Sign In</h1>
             <div>{{ form.hidden_tag() }}</div>
             <div class="form-input">{{ form.username }}</div>
@@ -14,7 +14,22 @@
             <div class="form-button">{{ form.submit }}</div>
             <div>
                 <p class="form-link">
-                    <a href="/register" class="form-link"> Don't have an account? Register Here</a>
+                    <a class="form-link"> Don't have an account? Register Here</a>
+                </p>
+            </div>
+        </form>
+        <form method="POST" action="" class="user-form" id="register">
+            <h1 class="form-title">Create Account</h1>
+            <div>{{ form.hidden_tag() }}</div>
+            <div class="form-input">{{ form.username }}</div>
+            <div class="form-input">{{ form.password }}</div>
+            <div class="form-input">{{ form.email }}</div>
+            <div class="form-input">{{ form.age }}</div>
+            <div class="form-input">{{ form.birthday }}</div>
+            <div class="form-button">{{ form.submit }}</div>
+            <div>
+                <p class="form-link">
+                    <a class="form-link" id="linkLogin">Already have an account? Sign in</a>
                 </p>
             </div>
         </form>

@@ -8,11 +8,11 @@
     {% block head %} {% endblock %}
 </head>
 <body>
+  <script src="{{ url_for('static', filename='js/form_selector.js') }}" type="module"></script>
+  {% block body %}{% endblock %}
 
-    {% block body %}{% endblock %}
-
-    <footer>
-        <p>&copy; 2024 Puso't Tulong Website. All rights reserved.</p>
-    </footer>
+  <footer>
+      <p>&copy; 2024 Puso't Tulong Website. All rights reserved.</p>
+  </footer>
 </body>
 </html>
