@@ -96,7 +96,7 @@ def login():
         user = User.query.filter_by(username=loginForm.username.data).first()
         if user and bcrypt.check_password_hash(user.password, loginForm.password.data):
             login_user(user)
-            return redirect('/main')  # send to whatever page after login
+            return redirect('/')  # send to whatever page after login
 
     return render_template('login.html', form=loginForm)
 
