@@ -138,7 +138,8 @@ def register():
 #after logging in
 @app.route('/main')
 def main():
-    return render_template('main.html')
+    postInfo = Information.query.all()
+    return render_template('main.html', posts = postInfo)
 
 @app.route('/goPost')
 def goPost():
