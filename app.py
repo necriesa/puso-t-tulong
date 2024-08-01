@@ -138,7 +138,7 @@ def register():
 #after logging in
 @app.route('/main')
 def main():
-    postInfo = Information.query.all()
+    postInfo = Information.query.order_by(Information.date_created).all()
     return render_template('main.html', posts = postInfo)
 
 @app.route('/goPost')
