@@ -4,6 +4,7 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, log
 from datetime import datetime
 from flask_wtf import FlaskForm
 from flask_bcrypt import Bcrypt
+from flask_migrate import Migrate
 from wtforms import StringField, PasswordField, SubmitField, IntegerField, DateField
 from wtforms.validators import InputRequired, Length, ValidationError
 
@@ -13,11 +14,13 @@ bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///information.db'
 app.config['SQLALCHEMY_BINDS'] = {
     'users' : 'sqlite:///users.db',
-    'drives' : 'sqlite:///drives.db'
+    'drives' : 'sqlite:///drives.db',
+    'comments' : 'sqlite:///comments.db'
 }
 app.config['SECRET_KEY'] = 'this_is_the_secretKey'
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 #login Manager for logins 
 login_manager = LoginManager()
@@ -30,12 +33,14 @@ def load_user(user_id):
 
 #Table Schemas
 class Information(db.Model):
+    __tablename__ = "information"
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(30), nullable = False)
     title = db.Column(db.String(100), nullable = False)
     body = db.Column(db.String(2000), nullable = False)
     date_created = db.Column(db.DateTime, default = datetime.now)
     contact_details = db.Column(db.String(50), nullable = False)
+
 
 class User(db.Model, UserMixin):
     __bind_key__ = 'users'
@@ -53,6 +58,19 @@ class Drive(db.Model):
     location = db.Column(db.String(100), nullable = False)
     drive_details = db.Column(db.String(1000))
     drive_date = db.Column(db.DateTime)
+
+    
+
+class Comment(db.Model):
+    __bind_key__ = 'comments'
+    id = db.Column(db.Integer, primary_key = True)
+    post_id = db.Column(db.Integer, db.ForeignKey(Information.id), nullable = False)
+    user = db.Column(db.String(30), nullable = False)
+    body = db.Column(db.String(2000), nullable = False)
+    date_created = db.Column(db.DateTime, default = datetime.now)
+
+    post = db.relationship('Information', back_populates='comments')
+Information.comments = db.relationship('Comment', order_by=Comment.date_created, back_populates='post')
 
 # Registration Form class
 class Registration(FlaskForm):
