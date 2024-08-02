@@ -4,20 +4,25 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, log
 from datetime import datetime
 from flask_wtf import FlaskForm
 from flask_bcrypt import Bcrypt
+from flask_migrate import Migrate
 from wtforms import StringField, PasswordField, SubmitField, IntegerField, DateField
 from wtforms.validators import InputRequired, Length, ValidationError
 
+#create the app and connect to the dbs
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///information.db'
 app.config['SQLALCHEMY_BINDS'] = {
     'users' : 'sqlite:///users.db',
-    'drives' : 'sqlite:///drives.db'
+    'drives' : 'sqlite:///drives.db',
+    'comments' : 'sqlite:///comments.db'
 }
 app.config['SECRET_KEY'] = 'this_is_the_secretKey'
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
+#login Manager for logins 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
@@ -33,12 +38,14 @@ def load_user(user_id):
 #TODO ```
 #Tables
 class Information(db.Model):
+    __tablename__ = "information"
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(30), nullable = False)
     title = db.Column(db.String(100), nullable = False)
     body = db.Column(db.String(2000), nullable = False)
     date_created = db.Column(db.DateTime, default = datetime.now)
     contact_details = db.Column(db.String(50), nullable = False)
+
 
 class User(db.Model, UserMixin):
     __bind_key__ = 'users'
@@ -49,7 +56,6 @@ class User(db.Model, UserMixin):
     age = db.Column(db.Integer, nullable = False)
     birthday = db.Column(db.Date, nullable=False)
     
-
 class Drive(db.Model):
     __bind_key__ = 'drives'
     id = db.Column(db.Integer, primary_key=True)
@@ -57,6 +63,19 @@ class Drive(db.Model):
     location = db.Column(db.String(100), nullable = False)
     drive_details = db.Column(db.String(1000))
     drive_date = db.Column(db.DateTime)
+
+    
+
+class Comment(db.Model):
+    __bind_key__ = 'comments'
+    id = db.Column(db.Integer, primary_key = True)
+    post_id = db.Column(db.Integer, db.ForeignKey(Information.id), nullable = False)
+    user = db.Column(db.String(30), nullable = False)
+    body = db.Column(db.String(2000), nullable = False)
+    date_created = db.Column(db.DateTime, default = datetime.now)
+
+    post = db.relationship('Information', back_populates='comments')
+Information.comments = db.relationship('Comment', order_by=Comment.date_created, back_populates='post')
 
 # Registration Form class
 class Registration(FlaskForm):
@@ -76,17 +95,7 @@ class Registration(FlaskForm):
         if existing_username:
             raise ValidationError("The username already exists. Please choose another.")
         
-class Comment(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    post_id = db.Column(db.Integer, db.ForeignKey('information.id'), nullable=False)
-    user = db.Column(db.String(30), nullable=False)
-    body = db.Column(db.String(1000), nullable=False)
-    date_created = db.Column(db.DateTime, default=datetime.now)
-
-    post = db.relationship('Information', backref=db.backref('comments', lazy=True))
-
-        
-
+# Login Form class
 class Login(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder" : "Username"})
     password = PasswordField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder" : "Password"})
@@ -104,10 +113,15 @@ class CommentForm(FlaskForm):
     submit = SubmitField('Comment')
 
 
+    submit = SubmitField("UserPost")
+#Routes 
+
+#home page
 @app.route('/')
 def index():
     return render_template('index.html', current_user=current_user)
 
+#login page
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     loginForm = Login()
@@ -116,17 +130,19 @@ def login():
         user = User.query.filter_by(username=loginForm.username.data).first()
         if user and bcrypt.check_password_hash(user.password, loginForm.password.data):
             login_user(user)
-            return redirect('/')
+            return redirect('/main')
 
     return render_template('auth.html', form=loginForm, form_type='login')
 
+#logout function
 @app.route('/logout', methods=['POST', 'GET'])
 @login_required #login is required for this
 def logout():
     logout_user()
     return redirect('/login')
 
-@app.route('/register', methods=['POST', 'GET']) #fix this part to add all form details
+#register page
+@app.route('/register', methods=['POST', 'GET'])
 def register():
     registerForm = Registration()
 
@@ -190,6 +206,7 @@ def view_post(post_id):
 
 
 
+#after logging in
 @app.route('/main')
 def main():
    postInfo = Information.query.order_by(Information.date_created).all()
