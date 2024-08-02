@@ -7,15 +7,15 @@
 {% block body %}
 
     <div class="navbar-container">
-        <a href="/" class="nav-links logo">Puso't Tulong</a>
+        <a href="/" class="nav-links logo"><img src="{{ url_for('static', filename='images/logov2.png') }}" class="logo"></a>
         <ul class="nav-links">
             <li class="nav-links"><a href="/" class="nav-links">Home</a></li>
+            <li class="nav-links"><a href="/main" class="nav-links">Forum</a></li>
             {% if current_user.is_authenticated %}
                 <li class="nav-links"><a href="/logout" class="nav-links">Welcome {{ current_user.username }}</a></li>
             {% else %}
                 <li class="nav-links"><a href="/login" class="nav-links">Login</a></li>
             {% endif %}
-            <li class="nav-links"><a href="/main" class="nav-links">Forum</a></li>
         </ul>
     </div>
 
@@ -25,7 +25,11 @@
             <h1> Care to lend to a hand to a student </h1>
             <h2> Donate some old school materials </h2>
             <p>
-                <a href="/register" class="form-button">Register Now</a>
+                {% if current_user.is_authenticated %}
+                <a href="/main" class="form-button">Forum</a></li>
+                {% else %}
+                    <a href="/register" class="form-button">Register Now</a>
+                {% endif %}
             </p>
         </div>
     </div>
