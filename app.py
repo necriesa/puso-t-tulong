@@ -98,7 +98,7 @@ def login():
             login_user(user)
             return redirect('/')
 
-    return render_template('login.html', form=loginForm, form_type='login')
+    return render_template('auth.html', form=loginForm, form_type='login')
 
 @app.route('/logout', methods=['POST', 'GET'])
 @login_required #login is required for this
@@ -125,7 +125,7 @@ def register():
 
         return redirect('/')
 
-    return render_template('login.html', form=registerForm, form_type='register')
+    return render_template('auth.html', form=registerForm, form_type='register')
 
 @app.route('/main')
 @login_required
