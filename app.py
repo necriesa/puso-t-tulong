@@ -76,12 +76,32 @@ class Registration(FlaskForm):
         if existing_username:
             raise ValidationError("The username already exists. Please choose another.")
         
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('information.id'), nullable=False)
+    user = db.Column(db.String(30), nullable=False)
+    body = db.Column(db.String(1000), nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.now)
+
+    post = db.relationship('Information', backref=db.backref('comments', lazy=True))
+
+        
 
 class Login(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder" : "Username"})
     password = PasswordField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder" : "Password"})
 
     submit = SubmitField("Login")
+
+class PostForm(FlaskForm):
+    title = StringField('Title', validators=[InputRequired(), Length(min=1, max=100)], render_kw={"placeholder": "Post Title"})
+    body = StringField('Body', validators=[InputRequired(), Length(min=1, max=2000)], render_kw={"placeholder": "Post Body"})
+    contact_details = StringField('Contact Details', validators=[InputRequired(), Length(min=1, max=50)], render_kw={"placeholder": "Contact Details"})
+    submit = SubmitField('Post')
+
+class CommentForm(FlaskForm):
+    body = StringField('Comment', validators=[InputRequired(), Length(min=1, max=1000)], render_kw={"placeholder": "Add a comment..."})
+    submit = SubmitField('Comment')
 
 
 @app.route('/')
@@ -127,10 +147,53 @@ def register():
 
     return render_template('auth.html', form=registerForm, form_type='register')
 
-@app.route('/main')
+@app.route('/forum')
+def forum():
+    posts = Information.query.order_by(Information.date_created.desc()).all()
+    return render_template('forum.html', posts=posts)
+
+
+
+@app.route('/add_post', methods=['GET', 'POST'])
 @login_required
+def add_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        new_post = Information(
+            user=current_user.username,
+            title=form.title.data,
+            body=form.body.data,
+            contact_details=form.contact_details.data
+        )
+        db.session.add(new_post)
+        db.session.commit()
+        return redirect('/forum')
+    return render_template('add_post.html', form=form)
+
+
+@app.route('/forum/view/<int:post_id>', methods=['GET', 'POST'])
+def view_post(post_id):
+    post = Information.query.get_or_404(post_id)
+    comment_form = CommentForm()
+    
+    if comment_form.validate_on_submit():
+        new_comment = Comment(
+            post_id=post.id,
+            user=current_user.username,
+            body=comment_form.body.data
+        )
+        db.session.add(new_comment)
+        db.session.commit()
+        return redirect(f'/forum/view/{post_id}')
+    
+    return render_template('view_post.html', post=post, form=comment_form)
+
+
+
+@app.route('/main')
 def main():
-    return render_template('main.html')
+   postInfo = Information.query.order_by(Information.date_created).all()
+   return render_template('forum.html', posts = postInfo)
 
 if __name__ == "__main__":
     app.run(debug=True) #remember to set to False when publishing i think
