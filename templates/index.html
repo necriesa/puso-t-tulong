@@ -34,8 +34,32 @@
         </div>
     </div>
 
-    <div class="website-info-container">
-        
+    <div class="cta-container">
+        <h2>Get Involved</h2>
+        <p class="cta-info">Your contribution can make a difference. Help us support students in need by donating today.</p>
+        {% if current_user.is_authenticated %}
+            <a href="/main" class="subcontent-button">Donate Here</a>
+        {% else %}
+            <a href="/register" class="subcontent-button">Register Now</a>
+        {% endif %}
+    </div>
+
+    <div class="hth-container">
+        <h2>How You Can Help</h2>
+        <ul class="hth-info">
+            <li>Donate school supplies</li>
+            <li>Volunteer your time</li>
+            <li>Lend a hand and teach a student</li>
+            <li></li>
+        </ul>
+    </div>
+    
+    <div class="about-container">
+        <h2>About Us</h2>
+        <p class="about-info">
+            Puso't Tulong is dedicated to supporting students with the resources they need to thrive academically.
+            Our mission is to provide educational materials to those in need and foster a community of support and generosity.
+        </p>
     </div>
 
 {% endblock %}
