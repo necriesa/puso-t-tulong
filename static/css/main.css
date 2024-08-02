@@ -108,3 +108,7 @@ footer {
 .form-button:active {
   transform: scale(0.98);
 }
+
+.form-hidden {
+  display: none;
+}

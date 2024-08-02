@@ -10,7 +10,11 @@
         <a href="/" class="nav-links logo">Puso't Tulong</a>
         <ul class="nav-links">
             <li class="nav-links"><a href="/" class="nav-links">Home</a></li>
-            <li class="nav-links"><a href="/login" class="nav-links">Login</a></li>
+            {% if current_user.is_authenticated() %}
+                <li class="nav-links">Welcome {{ current_user.username }}</li>
+            {% else %}
+                <li class="nav-links"><a href="/login" class="nav-links">Login</a></li>
+            {% endif %}
             <li class="nav-links"><a href="/main" class="nav-links">Forum</a></li>
         </ul>
     </div>
