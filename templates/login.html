@@ -6,7 +6,7 @@
 
 {% block body %}
     <div class="form-container">
-        <form method="POST" action="" class="user-form form-hidden" id="login">
+        <form method="POST" action="" class="user-form {% if form_type != 'login' %}form-hidden{% endif %}" id="login">
             <h1 class="form-title">Sign In</h1>
             <div>{{ form.hidden_tag() }}</div>
             <div class="form-input">{{ form.username }}</div>
@@ -18,7 +18,7 @@
                 </p>
             </div>
         </form>
-        <form method="POST" action="" class="user-form" id="register">
+        <form method="POST" action="" class="user-form {% if form_type != 'register' %}form-hidden{% endif %}" id="register">
             <h1 class="form-title">Create Account</h1>
             <div>{{ form.hidden_tag() }}</div>
             <div class="form-input">{{ form.username }}</div>

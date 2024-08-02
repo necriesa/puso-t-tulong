@@ -96,9 +96,9 @@ def login():
         user = User.query.filter_by(username=loginForm.username.data).first()
         if user and bcrypt.check_password_hash(user.password, loginForm.password.data):
             login_user(user)
-            return redirect('/')  # send to whatever page after login
+            return redirect('/')
 
-    return render_template('login.html', form=loginForm)
+    return render_template('login.html', form=loginForm, form_type='login')
 
 @app.route('/logout', methods=['POST', 'GET'])
 @login_required #login is required for this
@@ -125,7 +125,7 @@ def register():
 
         return redirect('/')
 
-    return render_template('login.html', form=registerForm)
+    return render_template('login.html', form=registerForm, form_type='register')
 
 @app.route('/main')
 @login_required
