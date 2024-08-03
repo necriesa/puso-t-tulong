@@ -12,6 +12,7 @@
         <ul>
             <li><a href="/">Home</a></li>
             <li><a href="/main">Forum</a></li>
+            <li><a href="/drives">Donation Drives</a></li>
             {% if current_user.is_authenticated %}
                 <li><a href="/logout">Welcome {{ current_user.username }}</a></li>
             {% else %}
