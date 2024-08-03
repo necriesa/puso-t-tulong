@@ -22,7 +22,7 @@ app.config['SECRET_KEY'] = 'this_is_the_secretKey'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-#login Manager for logins 
+#login Manager for logins
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
@@ -112,7 +112,7 @@ class DriveForm(FlaskForm):
 
     submit = SubmitField("DriveForm")
 
-#Routes 
+#Routes
 
 #home page
 @app.route('/')
@@ -150,7 +150,7 @@ def register():
             username = registerForm.username.data,
             password = hashed_pass,
             email = registerForm.email.data,
-            age = registerForm.age.data, 
+            age = registerForm.age.data,
             birthday = registerForm.birthday.data
         )
 
@@ -205,9 +205,9 @@ def createDrive():
     if driveForm.validate_on_submit():
         new_drive = Drive(
             drive_name = driveForm.drive_name.data,
-            location = driveForm.location.data, 
+            location = driveForm.location.data,
             drive_details = driveForm.drive_details.data,
-            drive_date = driveForm.drive_date.data 
+            drive_date = driveForm.drive_date.data
         )
 
         db.session.add(new_drive)
