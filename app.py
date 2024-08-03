@@ -94,13 +94,18 @@ class Login(FlaskForm):
 
     submit = SubmitField("Login")
 
-#Create Post Class
-class UserPost(FlaskForm):
-    title = StringField(validators=[InputRequired(), Length(min=2, max=20)], render_kw={"placeholder" : "Post title"})
-    body = StringField(validators=[InputRequired(), Length(min=5, max = 2000)], render_kw={"placeholder" : "Details..."})
-    contact_details = StringField(validators=[InputRequired(), Length(max=50)], render_kw={"placeholder" : "contact details"})
+class PostForm(FlaskForm):
+    title = StringField('Title', validators=[InputRequired(), Length(min=1, max=100)], render_kw={"placeholder": "Post Title"})
+    body = StringField('Body', validators=[InputRequired(), Length(min=1, max=2000)], render_kw={"placeholder": "Post Body"})
+    contact_details = StringField('Contact Details', validators=[InputRequired(), Length(min=1, max=50)], render_kw={"placeholder": "Contact Details"})
+    submit = SubmitField('Post')
 
-    submit = SubmitField("UserPost")
+class CommentForm(FlaskForm):
+    body = StringField('Comment', validators=[InputRequired(), Length(min=1, max=1000)], render_kw={"placeholder": "Add a comment..."})
+    submit = SubmitField('Comment')
+
+
+    submit = SubmitField("Post Comment")
 
 #Create Drivs Class
 class DriveForm(FlaskForm):
@@ -133,11 +138,12 @@ def login():
 
 #logout function
 @app.route('/logout', methods=['POST', 'GET'])
-@login_required
+@login_required #login is required for this
 def logout():
     logout_user()
     return redirect('/login')
 
+#register page
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     registerForm = Registration()
@@ -159,59 +165,54 @@ def register():
 
     return render_template('auth.html', form=registerForm, form_type='register')
 
+@app.route('/forum')
+def forum():
+    posts = Information.query.order_by(Information.date_created.desc()).all()
+    return render_template('forum.html', posts=posts)
+
+
+
+@app.route('/add_post', methods=['GET', 'POST'])
+@login_required
+def add_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        new_post = Information(
+            user=current_user.username,
+            title=form.title.data,
+            body=form.body.data,
+            contact_details=form.contact_details.data
+        )
+        db.session.add(new_post)
+        db.session.commit()
+        return redirect('/forum')
+    return render_template('add_post.html', form=form)
+
+
+@app.route('/forum/view/<int:post_id>', methods=['GET', 'POST'])
+def view_post(post_id):
+    post = Information.query.get_or_404(post_id)
+    comment_form = CommentForm()
+    
+    if comment_form.validate_on_submit():
+        new_comment = Comment(
+            post_id=post.id,
+            user=current_user.username,
+            body=comment_form.body.data
+        )
+        db.session.add(new_comment)
+        db.session.commit()
+        return redirect(f'/forum/view/{post_id}')
+    
+    return render_template('view_post.html', post=post, form=comment_form)
+
+
+
 #after logging in
 @app.route('/main')
 def main():
-    postInfo = Information.query.order_by(Information.date_created).all()
-    return render_template('main.html', posts = postInfo)
-
-@app.route('/goPost')
-def goPost():
-    if current_user.is_authenticated:
-        return redirect("{{ url_for('createPost') }}")
-    else:
-        return redirect("{{ url_for('login') }}")
-    
-@app.route('/createPost', methods = ['POST', 'GET'])
-@login_required
-def createPost():
-    PostForm = UserPost()
-
-    if PostForm.validate_on_submit():
-        new_post = Information(
-            user = current_user.username,
-            title = PostForm.title.data,
-            body = PostForm.body.data,
-            contact_details = PostForm.contact_details.data
-        )
-
-        db.session.add(new_post)
-        db.session.commit()
-
-        return redirect("{{ url_for('main') }}")
-
-@app.route('/drives')
-def drives():
-    drives_info = Drive.query.all()
-    return render_template('drives.html', info = drives_info)
-
-@app.route('/createDrive')
-@login_required
-def createDrive():
-    driveForm = DriveForm()
-
-    if driveForm.validate_on_submit():
-        new_drive = Drive(
-            drive_name = driveForm.drive_name.data,
-            location = driveForm.location.data,
-            drive_details = driveForm.drive_details.data,
-            drive_date = driveForm.drive_date.data
-        )
-
-        db.session.add(new_drive)
-        db.session.commit
-
-        return redirect("{{ url_for('drives')}}")
+   postInfo = Information.query.order_by(Information.date_created).all()
+   return render_template('forum.html', posts = postInfo)
 
 if __name__ == "__main__":
     app.run(debug=True) #remember to set to False when publishing i think

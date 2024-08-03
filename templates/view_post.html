@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Post</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forum.css') }}">
+</head>
+<body>
+    <div class="sidebar">
+        <a href="/" class="logo"><img src="{{ url_for('static', filename='images/logov2.png') }}" class="logo"></a>
+        <ul class="nav-links">
+            <li><a href="/" class="nav-links">Home</a></li>
+            <li><a href="/main" class="nav-links">Forum</a></li>
+            {% if current_user.is_authenticated %}
+                <li><a href="/logout" class="nav-links">Welcome {{ current_user.username }}</a></li>
+            {% else %}
+                <li><a href="/login" class="nav-links">Login</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    
+    <div class="content">
+        <h1>{{ post.title }}</h1>
+        <p>{{ post.body }}</p>
+        <p>Contact Details: {{ post.contact_details }}</p>
+        <p>Posted by: {{ post.user }} on {{ post.date_created }}</p>
+
+        <h2>Comments</h2>
+        <ul>
+            {% for comment in post.comments %}
+                <li>
+                    <p>{{ comment.body }}</p>
+                    <small>Commented by: {{ comment.user }} on {{ comment.date_created }}</small>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% if current_user.is_authenticated %}
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.body.label }}<br>
+                {{ form.body(size=80, maxlength=1000) }}<br>
+            </div>
+            <div>
+                {{ form.submit() }}
+            </div>
+        </form>
+        {% else %}
+        <p><a href="{{ url_for('login') }}">Log in</a> to comment</p>
+        {% endif %}
+    </div>
+</body>
+</html>

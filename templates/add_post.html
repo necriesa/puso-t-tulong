@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Post</title>
+</head>
+<body>
+    <h1>Add a New Post</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.title.label }}<br>
+            {{ form.title() }}<br>
+            {% for error in form.title.errors %}
+                <span>{{ error }}</span><br>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.body.label }}<br>
+            {{ form.body() }}<br>
+            {% for error in form.body.errors %}
+                <span>{{ error }}</span><br>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.contact_details.label }}<br>
+            {{ form.contact_details() }}<br>
+            {% for error in form.contact_details.errors %}
+                <span>{{ error }}</span><br>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+</body>
+</html>
