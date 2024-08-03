@@ -1,0 +1,17 @@
+{{% extends 'base.html' %}}
+
+{% block head %}
+    <title>Upcoming drives</title>
+{% end block %} 
+
+{% block body %}
+
+    {% for drive in info}
+        <div class="'drives">
+            <h1>{{drive.drive_name}}</h1>
+            <p> {{drive.location}}</p>
+            <p> {{drive.drive_date}} </p>
+            <p> {{drive.drive_details}}</p>
+        </div>
+    {% end for %}    
+{% end block %}
