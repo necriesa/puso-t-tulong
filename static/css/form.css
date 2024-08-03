@@ -19,6 +19,10 @@ footer {
   font-size: 13px;
 }
 
+.logo {
+  height: 15vh;
+}
+
 .form-hidden {
   display: none;
 }
