@@ -1,36 +1,35 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Post</title>
-</head>
-<body>
-    <h1>Add a New Post</h1>
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.title.label }}<br>
-            {{ form.title() }}<br>
+{% extends 'form_base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+
+    <div class="navbar-container">
+        <a href="/" class="nav-links logo"><img src="{{ url_for('static', filename='images/logov2.png') }}" class="logo"></a>
+    </div>
+
+    <div class="form-container">
+        <form method="POST" action="" class="post-form" id="post-creation">
+            <h1 class="form-title">Add a New Post</h1>
+            <div>{{ form.hidden_tag() }}</div>
+            {{ form.title.label }}
+            <div class="form-input">{{ form.title() }}</div>
             {% for error in form.title.errors %}
                 <span>{{ error }}</span><br>
             {% endfor %}
-        </p>
-        <p>
-            {{ form.body.label }}<br>
-            {{ form.body() }}<br>
+            {{ form.body.label }}
+            <div class="form-input">{{ form.body() }}</div>
             {% for error in form.body.errors %}
-                <span>{{ error }}</span><br>
+                <span>{{ error }}</span>
             {% endfor %}
-        </p>
-        <p>
-            {{ form.contact_details.label }}<br>
-            {{ form.contact_details() }}<br>
+            {{ form.contact_details.label }}
+            <div class="form-input">{{ form.contact_details() }}</div>
             {% for error in form.contact_details.errors %}
                 <span>{{ error }}</span><br>
             {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
-    </form>
-</body>
-</html>
+            <div class="form-button">{{ form.submit() }}</div>
+        </form>
+    </div>
+
+{% endblock %}
