@@ -31,7 +31,6 @@ login_manager.login_view = "login"
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-#Table Schemas
 class Information(db.Model):
     __tablename__ = "information"
     id = db.Column(db.Integer, primary_key=True)
@@ -117,7 +116,7 @@ class DriveForm(FlaskForm):
 #home page
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', current_user=current_user)
 
 #login page
 @app.route('/login', methods=['POST', 'GET'])
@@ -128,9 +127,9 @@ def login():
         user = User.query.filter_by(username=loginForm.username.data).first()
         if user and bcrypt.check_password_hash(user.password, loginForm.password.data):
             login_user(user)
-            return redirect('/main')
+            return redirect('/')
 
-    return render_template('login.html', form=loginForm)
+    return render_template('auth.html', form=loginForm, form_type='login')
 
 #logout function
 @app.route('/logout', methods=['POST', 'GET'])
@@ -139,7 +138,6 @@ def logout():
     logout_user()
     return redirect('/login')
 
-#register page
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     registerForm = Registration()
@@ -157,9 +155,9 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        return redirect('/login')
+        return redirect('/')
 
-    return render_template('register.html', form=registerForm)
+    return render_template('auth.html', form=registerForm, form_type='register')
 
 #after logging in
 @app.route('/main')
