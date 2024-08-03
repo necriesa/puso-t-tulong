@@ -27,28 +27,28 @@
         <p>Posted by: {{ post.user }} on {{ post.date_created }}</p>
 
         <h2>Comments</h2>
-        <ul>
+        <ul class="comments">
             {% for comment in post.comments %}
                 <li>
-                    <p>{{ comment.body }}</p>
-                    <small>Commented by: {{ comment.user }} on {{ comment.date_created }}</small>
+                    <div class="comment-container">
+                        <p class="comment-body">{{ comment.body }}</p>
+                        <small>Commented by: {{ comment.user }} on {{ comment.date_created }}</small>
+                    </div>
                 </li>
             {% endfor %}
         </ul>
 
         {% if current_user.is_authenticated %}
-        <form method="POST">
-            {{ form.hidden_tag() }}
-            <div>
-                {{ form.body.label }}<br>
-                {{ form.body(size=80, maxlength=1000) }}<br>
+            <div class="add-comment-container">
+                <form method="POST" class="add-comment">
+                    <div>{{ form.hidden_tag() }}</div>
+                    {{ form.body.label }}
+                    <div class="comment-input">{{ form.body(size=80, maxlength=1000) }}</div>
+                    <div class="comment-button">{{ form.submit() }}</div>
+                </form>
             </div>
-            <div>
-                {{ form.submit() }}
-            </div>
-        </form>
         {% else %}
-        <p><a href="{{ url_for('login') }}">Log in</a> to comment</p>
+            <p><a href="{{ url_for('login') }}" class="loginLink">Log in to comment</a></p>
         {% endif %}
     </div>
 </body>
