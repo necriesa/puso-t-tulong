@@ -6,19 +6,6 @@
 
 {% block body %}
 
-    <div class="navbar-container">
-        <a href="/" class="nav-links logo"><img src="{{ url_for('static', filename='images/logov2.png') }}" class="logo"></a>
-        <ul class="nav-links">
-            <li class="nav-links"><a href="/" class="nav-links">Home</a></li>
-            <li class="nav-links"><a href="/main" class="nav-links">Forum</a></li>
-            {% if current_user.is_authenticated %}
-                <li class="nav-links"><a href="/logout" class="nav-links">Welcome {{ current_user.username }}</a></li>
-            {% else %}
-                <li class="nav-links"><a href="/login" class="nav-links">Login</a></li>
-            {% endif %}
-        </ul>
-    </div>
-
     <div class="content-banner">
         <img src="{{ url_for('static', filename='images/home/background-2.jpg') }}" class="background-image">
         <div class="content-banner-info">
