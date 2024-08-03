@@ -22,7 +22,7 @@ app.config['SECRET_KEY'] = 'this_is_the_secretKey'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-#login Manager for logins 
+#login Manager for logins
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
@@ -31,12 +31,6 @@ login_manager.login_view = "login"
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-#TODO: create the databases within the app using the python shell
-#TODO ``` from app import app, db
-#TODO     with app.app_context:
-#TODO          db.create_all()
-#TODO ```
-#Tables
 class Information(db.Model):
     __tablename__ = "information"
     id = db.Column(db.Integer, primary_key=True)
@@ -63,8 +57,6 @@ class Drive(db.Model):
     location = db.Column(db.String(100), nullable = False)
     drive_details = db.Column(db.String(1000))
     drive_date = db.Column(db.DateTime)
-
-    
 
 class Comment(db.Model):
     __bind_key__ = 'comments'
@@ -114,7 +106,17 @@ class CommentForm(FlaskForm):
 
 
     submit = SubmitField("Post Comment")
-#Routes 
+
+#Create Drivs Class
+class DriveForm(FlaskForm):
+    drive_name = StringField(validators=[InputRequired(), Length(max = 40)], render_kw={'placeholder' : "Name of the drive"})
+    location = StringField(validators=[InputRequired() , Length(max = 40)], render_kw={"placeholder" : "location"})
+    drive_details = StringField(validators=[InputRequired(), Length(max=1000)], render_kw={"placeholder" : "details"})
+    drive_date = DateField(validators=[InputRequired()], format='%Y-%m-%d', render_kw={"placeholder" : "YYYY-MM-DD"})
+
+    submit = SubmitField("DriveForm")
+
+#Routes
 
 #home page
 @app.route('/')
@@ -130,7 +132,7 @@ def login():
         user = User.query.filter_by(username=loginForm.username.data).first()
         if user and bcrypt.check_password_hash(user.password, loginForm.password.data):
             login_user(user)
-            return redirect('/main')
+            return redirect('/')
 
     return render_template('auth.html', form=loginForm, form_type='login')
 
