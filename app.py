@@ -104,7 +104,6 @@ class CommentForm(FlaskForm):
     body = StringField('Comment', validators=[InputRequired(), Length(min=1, max=1000)], render_kw={"placeholder": "Add a comment..."})
     submit = SubmitField('Comment')
 
-
     submit = SubmitField("Post Comment")
 
 #Create Drivs Class
@@ -117,7 +116,6 @@ class DriveForm(FlaskForm):
     submit = SubmitField("DriveForm")
 
 #Routes
-
 #home page
 @app.route('/')
 def index():
@@ -206,27 +204,6 @@ def view_post(post_id):
     
     return render_template('view_post.html', post=post, form=comment_form)
 
-@app.route('/drives')
-def drives():
-    drives_info = Drive.query.all()
-    return render_template('drives.html', info = drives_info)
-
-@app.route('/createDrive')
-@login_required
-def createDrive():
-    drive_form = DriveForm()
-
-    if drive_form.validate_on_submit():
-        new_drive = Drive(
-            drive_name = drive_form.drive_name.data,
-            location = drive_form.location.data,
-            drive_details = drive_form.drive_details.data,
-            drive_date = drive_form.drive_date.data
-        )
-
-        db.session.add(new_drive)
-        db.session.commit()
-        return redirect('/drives')
 
 #after logging in
 @app.route('/main')
