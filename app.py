@@ -59,8 +59,6 @@ class Drive(db.Model):
     drive_details = db.Column(db.String(1000))
     drive_date = db.Column(db.DateTime)
 
-    
-
 class Comment(db.Model):
     __bind_key__ = 'comments'
     id = db.Column(db.Integer, primary_key = True)
@@ -215,7 +213,7 @@ def createDrive():
         db.session.add(new_drive)
         db.session.commit
 
-        return redirect("{{ url_for('main')}}")
+        return redirect("{{ url_for('drives')}}")
 
 if __name__ == "__main__":
     app.run(debug=True) #remember to set to False when publishing i think
