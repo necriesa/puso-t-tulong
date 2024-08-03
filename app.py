@@ -104,7 +104,6 @@ class CommentForm(FlaskForm):
     body = StringField('Comment', validators=[InputRequired(), Length(min=1, max=1000)], render_kw={"placeholder": "Add a comment..."})
     submit = SubmitField('Comment')
 
-
     submit = SubmitField("Post Comment")
 
 #Create Drivs Class
@@ -117,7 +116,6 @@ class DriveForm(FlaskForm):
     submit = SubmitField("DriveForm")
 
 #Routes
-
 #home page
 @app.route('/')
 def index():
@@ -205,8 +203,6 @@ def view_post(post_id):
         return redirect(f'/forum/view/{post_id}')
     
     return render_template('view_post.html', post=post, form=comment_form)
-
-
 
 #after logging in
 @app.route('/main')
