@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forum.css') }}">
+</head>
+<body>
+    <div class="sidebar">
+        <a href="/" class="logo"><img src="{{ url_for('static', filename='images/logov2.png') }}" class="logo"></a>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/main">Forum</a></li>
+            <li><a href="/drives">Donation Drives</a></li>
+            {% if current_user.is_authenticated %}
+                <li><a href="/logout">Welcome {{ current_user.username }}</a></li>
+            {% else %}
+                <li><a href="/login">Login</a></li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="content">
+        <h1>Forum</h1>
+        
+        <h2>All Posts</h2>
+        <ul class="post-list">
+            {% for post in posts %}
+                <li>
+                    <a href="{{ url_for('view_post', post_id=post.id) }}">{{ post.title }}</a> by {{ post.user }} on {{ post.date_created.strftime('%Y-%m-%d %H:%M:%S') }}
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('add_post') }}" class="add-post"><button class="add-post-button">Add Post</button></a>
+        {% endif %}
+    </div>
+
+    <footer>
+        <hr class="footer">
+        <p class="footer">&copy; 2024 Puso't Tulong Website. All rights reserved.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{% extends 'form_base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+
+    <div class="navbar-container">
+        <a href="/" class="nav-links logo"><img src="{{ url_for('static', filename='images/logov2.png') }}" class="logo"></a>
+    </div>
+
+    <div class="form-container">
+        <form method="POST" action="" class="post-form" id="post-creation">
+            <h1 class="form-title">Add a New Post</h1>
+            <div>{{ form.hidden_tag() }}</div>
+            {{ form.title.label }}
+            <div class="form-input">{{ form.title() }}</div>
+            {% for error in form.title.errors %}
+                <span>{{ error }}</span><br>
+            {% endfor %}
+            {{ form.body.label }}
+            <div class="form-input">{{ form.body() }}</div>
+            {% for error in form.body.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+            {{ form.contact_details.label }}
+            <div class="form-input">{{ form.contact_details() }}</div>
+            {% for error in form.contact_details.errors %}
+                <span>{{ error }}</span><br>
+            {% endfor %}
+            <div class="form-button">{{ form.submit() }}</div>
+        </form>
+    </div>
+
+{% endblock %}
