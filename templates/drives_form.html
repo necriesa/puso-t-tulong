@@ -1,0 +1,28 @@
+{% extends 'form_base.html' %}
+
+{% block head %}
+  <title>Create Drive</title>
+{% endblock %}
+
+{% block body %}
+  <div class="navbar-container">
+    <a href="/" class="nav-links logo"><img src="{{ url_for('static', filename='images/logov2.png') }}" class="logo"></a>
+  </div>
+
+  <div class="form-container">
+    <form method="POST" action="" class="user-form" id="drive-creation">
+        <h1 class="form-title">Create a Donation Drive</h1>
+        <div>{{ form.hidden_tag() }}</div>
+        <div class="form-input">{{ form.drive_name }}</div>
+        <div class="form-input">{{ form.location }}</div>
+        <div class="form-input">{{ form.drive_details }}</div>
+        <div class="form-input">{{ form.drive_date }}</div>
+        <div class="form-button">{{ form.submit }}</div>
+        <div>
+            <p class="form-link">
+                <a class="form-link" id="linkDrives" href="/drives">Return to Running Drives</a>
+            </p>
+        </div>
+    </form>
+  </div>
+{% endblock %}

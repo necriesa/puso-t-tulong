@@ -6,6 +6,66 @@
 
 {% block body %}
 
-<h1> Hello World! </h1>
+    <div class="navbar-container">
+        <a href="/" class="nav-links logo"><img src="{{ url_for('static', filename='images/logov2.png') }}" class="logo"></a>
+        <ul class="nav-links">
+            <li class="nav-links"><a href="/" class="nav-links">Home</a></li>
+            <li class="nav-links"><a href="/main" class="nav-links">Forum</a></li>
+            <li class="nav-links"><a href="/drives" class="nav-links">Donation Drives</a></li>
+            {% if current_user.is_authenticated %}
+                <li class="nav-links"><a href="/logout" class="nav-links">Welcome {{ current_user.username }}</a></li>
+            {% else %}
+                <li class="nav-links"><a href="/login" class="nav-links">Login</a></li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="content-banner">
+        <img src="{{ url_for('static', filename='images/home/background-2.jpg') }}" class="background-image">
+        <div class="content-banner-info">
+            <h1> Empower a Student's Future, Pave the Way for a Better Future </h1>
+            <h2> Provide aid and resources for struggling students and young adults. </h2>
+            <p>
+                {% if current_user.is_authenticated %}
+                    <a href="/main" class="content-button">Donate Here</a>
+                {% else %}
+                    <a href="/register" class="content-button">Register Now</a>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <div class="cta-container">
+        <h2>Get Involved</h2>
+        <p class="cta-info">Your contribution can make a difference. Help us support students in need by donating today.</p>
+        {% if current_user.is_authenticated %}
+            <a href="/main" class="subcontent-button">Donate Here</a>
+        {% else %}
+            <a href="/register" class="subcontent-button">Register Now</a>
+        {% endif %}
+    </div>
+
+    <div class="hth-container">
+        <h2>How You Can Help</h2>
+        <ul class="hth-info">
+            <li>Donate school supplies</li>
+            <li>Volunteer your time</li>
+            <li>Lend a hand and teach a student</li>
+            <li></li>
+        </ul>
+    </div>
+    
+    <div class="about-container">
+        <h2>About Us</h2>
+        <p class="about-info">
+            Puso't Tulong is dedicated to supporting students with the resources they need to thrive academically.
+            Our mission is to provide educational materials to those in need and foster a community of support and generosity.
+        </p>
+    </div>
+
+    <footer>
+        <hr class="footer">
+        <p class="footer">&copy; 2024 Puso't Tulong Website. All rights reserved.</p>
+    </footer>
 
 {% endblock %}
