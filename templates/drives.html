@@ -1,17 +1,32 @@
-{{% extends 'base.html' %}}
+{% extends 'base.html' %}
 
 {% block head %}
     <title>Upcoming drives</title>
-{% end block %} 
+{% endblock %}
 
 {% block body %}
 
-    {% for drive in info}
+    <div class="navbar-container">
+        <a href="/" class="nav-links logo"><img src="{{ url_for('static', filename='images/logov2.png') }}" class="logo"></a>
+        <ul class="nav-links">
+            <li class="nav-links"><a href="/" class="nav-links">Home</a></li>
+            <li class="nav-links"><a href="/main" class="nav-links">Forum</a></li>
+            <li class="nav-links"><a href="/drives" class="nav-links">Donation Drives</a></li>
+            {% if current_user.is_authenticated %}
+                <li class="nav-links"><a href="/logout" class="nav-links">Welcome {{ current_user.username }}</a></li>
+            {% else %}
+                <li class="nav-links"><a href="/login" class="nav-links">Login</a></li>
+            {% endif %}
+        </ul>
+    </div>
+
+    {% for drive in info %}
         <div class="'drives">
             <h1>{{drive.drive_name}}</h1>
             <p> {{drive.location}}</p>
             <p> {{drive.drive_date}} </p>
             <p> {{drive.drive_details}}</p>
         </div>
-    {% end for %}    
-{% end block %}
+    {% endfor %}
+
+{% endblock %}
