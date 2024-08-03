@@ -113,7 +113,7 @@ class DriveForm(FlaskForm):
     drive_details = StringField(validators=[InputRequired(), Length(max=1000)], render_kw={"placeholder" : "details"})
     drive_date = DateField(validators=[InputRequired()], format='%Y-%m-%d', render_kw={"placeholder" : "YYYY-MM-DD"})
 
-    submit = SubmitField("DriveForm")
+    submit = SubmitField("Drive Form")
 
 #Routes
 #home page
@@ -209,7 +209,7 @@ def drives():
     drives_info = Drive.query.all()
     return render_template('drives.html', info = drives_info)
 
-@app.route('/createDrive')
+@app.route('/createDrive', methods=['POST', 'GET'])
 @login_required
 def createDrive():
     drive_form = DriveForm()
@@ -225,6 +225,8 @@ def createDrive():
         db.session.add(new_drive)
         db.session.commit()
         return redirect('/drives')
+    
+    return render_template('drives_form.html', form=drive_form)
 
 #after logging in
 @app.route('/main')

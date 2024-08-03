@@ -1,4 +1,4 @@
-{% extends form_base.html %}
+{% extends 'form_base.html' %}
 
 {% block head %}
   <title>Create Drive</title>
@@ -20,7 +20,7 @@
         <div class="form-button">{{ form.submit }}</div>
         <div>
             <p class="form-link">
-                <a class="form-link" id="linkRegister"> Don't have an account? Register Here</a>
+                <a class="form-link" id="linkDrives" href="/drives">Return to Running Drives</a>
             </p>
         </div>
     </form>
