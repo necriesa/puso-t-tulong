@@ -113,7 +113,7 @@ class CommentForm(FlaskForm):
     submit = SubmitField('Comment')
 
 
-    submit = SubmitField("UserPost")
+    submit = SubmitField("Post Comment")
 #Routes 
 
 #home page
