@@ -4,20 +4,25 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, log
 from datetime import datetime
 from flask_wtf import FlaskForm
 from flask_bcrypt import Bcrypt
+from flask_migrate import Migrate
 from wtforms import StringField, PasswordField, SubmitField, IntegerField, DateField
 from wtforms.validators import InputRequired, Length, ValidationError
 
+#create the app and connect to the dbs
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///information.db'
 app.config['SQLALCHEMY_BINDS'] = {
     'users' : 'sqlite:///users.db',
-    'drives' : 'sqlite:///drives.db'
+    'drives' : 'sqlite:///drives.db',
+    'comments' : 'sqlite:///comments.db'
 }
 app.config['SECRET_KEY'] = 'this_is_the_secretKey'
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
+#login Manager for logins
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
@@ -26,19 +31,15 @@ login_manager.login_view = "login"
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-#TODO: create the databases within the app using the python shell
-#TODO ``` from app import app, db
-#TODO     with app.app_context:
-#TODO          db.create_all()
-#TODO ```
-#Tables
 class Information(db.Model):
+    __tablename__ = "information"
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(30), nullable = False)
     title = db.Column(db.String(100), nullable = False)
     body = db.Column(db.String(2000), nullable = False)
     date_created = db.Column(db.DateTime, default = datetime.now)
     contact_details = db.Column(db.String(50), nullable = False)
+
 
 class User(db.Model, UserMixin):
     __bind_key__ = 'users'
@@ -49,7 +50,6 @@ class User(db.Model, UserMixin):
     age = db.Column(db.Integer, nullable = False)
     birthday = db.Column(db.Date, nullable=False)
     
-
 class Drive(db.Model):
     __bind_key__ = 'drives'
     id = db.Column(db.Integer, primary_key=True)
@@ -57,6 +57,17 @@ class Drive(db.Model):
     location = db.Column(db.String(100), nullable = False)
     drive_details = db.Column(db.String(1000))
     drive_date = db.Column(db.DateTime)
+
+class Comment(db.Model):
+    __bind_key__ = 'comments'
+    id = db.Column(db.Integer, primary_key = True)
+    post_id = db.Column(db.Integer, db.ForeignKey(Information.id), nullable = False)
+    user = db.Column(db.String(30), nullable = False)
+    body = db.Column(db.String(2000), nullable = False)
+    date_created = db.Column(db.DateTime, default = datetime.now)
+
+    post = db.relationship('Information', back_populates='comments')
+Information.comments = db.relationship('Comment', order_by=Comment.date_created, back_populates='post')
 
 # Registration Form class
 class Registration(FlaskForm):
@@ -76,18 +87,38 @@ class Registration(FlaskForm):
         if existing_username:
             raise ValidationError("The username already exists. Please choose another.")
         
-
+# Login Form class
 class Login(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder" : "Username"})
     password = PasswordField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder" : "Password"})
 
     submit = SubmitField("Login")
 
+#Create Post Class
+class UserPost(FlaskForm):
+    title = StringField(validators=[InputRequired(), Length(min=2, max=20)], render_kw={"placeholder" : "Post title"})
+    body = StringField(validators=[InputRequired(), Length(min=5, max = 2000)], render_kw={"placeholder" : "Details..."})
+    contact_details = StringField(validators=[InputRequired(), Length(max=50)], render_kw={"placeholder" : "contact details"})
 
+    submit = SubmitField("UserPost")
+
+#Create Drivs Class
+class DriveForm(FlaskForm):
+    drive_name = StringField(validators=[InputRequired(), Length(max = 40)], render_kw={'placeholder' : "Name of the drive"})
+    location = StringField(validators=[InputRequired() , Length(max = 40)], render_kw={"placeholder" : "location"})
+    drive_details = StringField(validators=[InputRequired(), Length(max=1000)], render_kw={"placeholder" : "details"})
+    drive_date = DateField(validators=[InputRequired()], format='%Y-%m-%d', render_kw={"placeholder" : "YYYY-MM-DD"})
+
+    submit = SubmitField("DriveForm")
+
+#Routes
+
+#home page
 @app.route('/')
 def index():
     return render_template('index.html', current_user=current_user)
 
+#login page
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     loginForm = Login()
@@ -100,13 +131,14 @@ def login():
 
     return render_template('auth.html', form=loginForm, form_type='login')
 
+#logout function
 @app.route('/logout', methods=['POST', 'GET'])
-@login_required #login is required for this
+@login_required
 def logout():
     logout_user()
     return redirect('/login')
 
-@app.route('/register', methods=['POST', 'GET']) #fix this part to add all form details
+@app.route('/register', methods=['POST', 'GET'])
 def register():
     registerForm = Registration()
 
@@ -127,10 +159,59 @@ def register():
 
     return render_template('auth.html', form=registerForm, form_type='register')
 
+#after logging in
 @app.route('/main')
-@login_required
 def main():
-    return render_template('main.html')
+    postInfo = Information.query.order_by(Information.date_created).all()
+    return render_template('main.html', posts = postInfo)
+
+@app.route('/goPost')
+def goPost():
+    if current_user.is_authenticated:
+        return redirect("{{ url_for('createPost') }}")
+    else:
+        return redirect("{{ url_for('login') }}")
+    
+@app.route('/createPost', methods = ['POST', 'GET'])
+@login_required
+def createPost():
+    PostForm = UserPost()
+
+    if PostForm.validate_on_submit():
+        new_post = Information(
+            user = current_user.username,
+            title = PostForm.title.data,
+            body = PostForm.body.data,
+            contact_details = PostForm.contact_details.data
+        )
+
+        db.session.add(new_post)
+        db.session.commit()
+
+        return redirect("{{ url_for('main') }}")
+
+@app.route('/drives')
+def drives():
+    drives_info = Drive.query.all()
+    return render_template('drives.html', info = drives_info)
+
+@app.route('/createDrive')
+@login_required
+def createDrive():
+    driveForm = DriveForm()
+
+    if driveForm.validate_on_submit():
+        new_drive = Drive(
+            drive_name = driveForm.drive_name.data,
+            location = driveForm.location.data,
+            drive_details = driveForm.drive_details.data,
+            drive_date = driveForm.drive_date.data
+        )
+
+        db.session.add(new_drive)
+        db.session.commit
+
+        return redirect("{{ url_for('drives')}}")
 
 if __name__ == "__main__":
     app.run(debug=True) #remember to set to False when publishing i think
