@@ -22,11 +22,18 @@
 
     {% for drive in info %}
         <div class="'drives">
-            <h1>{{drive.drive_name}}</h1>
-            <p> {{drive.location}}</p>
-            <p> {{drive.drive_date}} </p>
-            <p> {{drive.drive_details}}</p>
+            <div class="drive-container">
+                <h1>{{drive.drive_name}}</h1>
+                <p> {{drive.location}}</p>
+                <p> {{drive.drive_date}} </p>
+                <p> {{drive.drive_details}}</p>
+            </div>
         </div>
     {% endfor %}
+
+    <footer class="footer-drives">
+        <hr class="footer">
+        <p class="footer">&copy; 2024 Puso't Tulong Website. All rights reserved.</p>
+    </footer>
 
 {% endblock %}
