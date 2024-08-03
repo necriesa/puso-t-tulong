@@ -104,6 +104,16 @@ class UserPost(FlaskForm):
     contact_details = StringField(validators=[InputRequired(), Length(max=50)], render_kw={"placeholder" : "contact details"})
 
     submit = SubmitField("UserPost")
+
+#Create Drivs Class
+class DriveForm(FlaskForm):
+    drive_name = StringField(validators=[InputRequired(), Length(max = 40)], render_kw={'placeholder' : "Name of the drive"})
+    location = StringField(validators=[InputRequired() , Length(max = 40)], render_kw={"placeholder" : "location"})
+    drive_details = StringField(validators=[InputRequired(), Length(max=1000)], render_kw={"placeholder" : "details"})
+    drive_date = DateField(validators=[InputRequired()], format='%Y-%m-%d', render_kw={"placeholder" : "YYYY-MM-DD"})
+
+    submit = SubmitField("DriveForm")
+
 #Routes 
 
 #home page
@@ -188,6 +198,24 @@ def createPost():
 def drives():
     drives_info = Drive.query.all()
     return render_template('drives.html', info = drives_info)
+
+@app.route('/createDrive')
+@login_required
+def createDrive():
+    driveForm = DriveForm()
+
+    if driveForm.validate_on_submit():
+        new_drive = Drive(
+            drive_name = driveForm.drive_name.data,
+            location = driveForm.location.data, 
+            drive_details = driveForm.drive_details.data,
+            drive_date = driveForm.drive_date.data 
+        )
+
+        db.session.add(new_drive)
+        db.session.commit
+
+        return redirect("{{ url_for('main')}}")
 
 if __name__ == "__main__":
     app.run(debug=True) #remember to set to False when publishing i think
