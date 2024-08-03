@@ -109,7 +109,7 @@ class UserPost(FlaskForm):
 #home page
 @app.route('/')
 def index():
-    return render_template(index.html)
+    return render_template('index.html')
 
 #login page
 @app.route('/login', methods=['POST', 'GET'])
