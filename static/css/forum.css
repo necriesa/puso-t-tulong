@@ -1,3 +1,9 @@
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
 .sidebar {
   position: fixed;
   top: 0;
@@ -10,6 +16,22 @@
   flex-direction: column;
   padding-top: 20px;
   font-family: 'Courier New', Courier, monospace;
+}
+
+footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  font-size: 13px;
+  background-color: #efefef;
+  width: 100%;
+  object-fit: cover;
+}
+
+.footer {
+  width: auto;
+  size: 2;
+  margin: 25px;
 }
 
 .sidebar .logo {
